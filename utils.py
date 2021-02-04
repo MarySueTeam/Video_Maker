@@ -85,13 +85,19 @@ def readDir(path):
     :param path: 读取的文件路径(绝对路径)
     :return: 文件绝对路径的列表
     """
+
+    # 排除干扰文件
+    ignore_file = ['.DS_Store', '.gitkeep']
     paths = []
     files = os.listdir(path)
     for file in track(files, description="读取图片文件中..."):
         if not os.path.isdir(file):
-            file_path = os.path.join(path, file)
-            #console.log(file_path)
-            paths.append(file_path)
+            if file not in ignore_file:
+                file_path = os.path.join(path, file)
+                #console.log(file_path)
+                paths.append(file_path)
+            else:
+                console.log(file + "被排除")
     return paths
 
 
@@ -99,14 +105,14 @@ def makeBGM(input_dir,
             output_dir,
             output_tmp_filename,
             times=1,
-            fade_time=1000):
+            fade_time=(1000, 1000)):
     """
     根据需要转换BGM
     :param input_dir: BGM文件存储路径
     :param output_dir: 转换过后BGM文件输出路径，中转文件的暂时存放路径
     :param output_tmp_filename: 转换过后BGM文件名称
     :param times: BGM文件循环播放的次数
-    :param fade_time: BGM淡入淡出时长ms
+    :param fade_time: BGM淡入淡出时长ms,(淡入时长,淡出时长)
     :return: 转换完成的文件路径
     """
     bgm = ""
@@ -116,7 +122,8 @@ def makeBGM(input_dir,
         break
     console.log(bgm.duration_seconds, bgm.dBFS, bgm.frame_rate)
     bgm *= times
-    bgm.fade_in(fade_time).fade_out(fade_time)
+    fade_start_time, fade_end_time = fade_time
+    bgm.fade_in(fade_start_time).fade_out(fade_end_time)
     console.log("开始导出音频文件")
     output_file_path = os.path.join(output_dir, output_tmp_filename)
     bgm.export(output_file_path, format='mp3')

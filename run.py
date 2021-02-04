@@ -73,15 +73,16 @@ def main():
     bgm_tmp_file_path = makeBGM(input_dir=bgm_dir,
                                 output_dir=tmp_music_dir,
                                 output_tmp_filename="bgm.mp3",
-                                times=3,
-                                fade_time=1000)
-    console.log(bgm_tmp_file_path)
+                                times=1,
+                                fade_time=(1000, 1000))
+    console.log('经过处理的音频文件路径为' + bgm_tmp_file_path)
     bgm_clip = AudioFileClip(bgm_tmp_file_path)
+    console.log("背景音乐切片处理完毕")
 
     # 混合CLIP
-    console.log("开始将帧合并为视频文件")
+    console.log("开始将帧切片合并为视频文件")
     final_clip = CompositeVideoClip(clips)
-    console.log("开始添加背景音乐文件")
+    console.log("开始合并背景音乐切片")
     final_clip = final_clip.set_audio(bgm_clip)
     console.log("开始导出视频文件到" + output_file)
     final_clip.write_videofile(output_file)
