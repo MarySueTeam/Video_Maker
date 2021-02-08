@@ -1,6 +1,6 @@
 ---
 name: 功能添加
-about: 提出问题帮助我们更好的改进这个项目
+about: 添加新的功能帮助我们更好的改进这个项目
 title: 功能添加
 labels: enhancement
 assignees: allinu
