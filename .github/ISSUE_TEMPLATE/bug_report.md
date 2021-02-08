@@ -1,7 +1,7 @@
 ---
 name: 问题报告
 about: 提出问题帮助我们更好的改进这个项目
-title: 问题
+title: 问题报告
 labels: bug, help wanted, invalid, question
 assignees: allinu
 
@@ -12,8 +12,8 @@ assignees: allinu
 
 **如何复现您的问题**
 复现问题需要如下步骤
-1. 
-2. 
+1.
+2.
 
 
 **期待的行为或者结果**
@@ -23,8 +23,8 @@ assignees: allinu
 如果可以，请添加一个截图帮助我们更好的理解你所描述的内容
 
 **系统环境**
- - 操作系统: 
- - 代码版本: 
+ - 操作系统：
+ - 代码版本：
 
 **附加信息**
 您可以添加其他的附加信息在此
