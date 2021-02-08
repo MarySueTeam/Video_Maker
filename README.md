@@ -1,5 +1,7 @@
 # Video Maker
 
+![syntax check](https://github.com/allinu/Video_Maker/workflows/syntax%20check/badge.svg)
+
 > 视频生成器
 
 ## 项目描述
