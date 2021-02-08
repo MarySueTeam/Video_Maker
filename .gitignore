@@ -18,6 +18,7 @@
 pkg/
 src/images/*
 src/music/*
+fonts/*
 
 ### Emacs ###
 # -*- mode: gitignore; -*-
@@ -81,6 +82,7 @@ flycheck_*.el
 .idea/**/usage.statistics.xml
 .idea/**/dictionaries
 .idea/**/shelf
+.idea
 
 # Generated files
 .idea/**/contentModel.xml
@@ -473,6 +475,7 @@ dmypy.json
 [._]s[a-rt-v][a-z]
 [._]ss[a-gi-z]
 [._]sw[a-p]
+.vim
 
 # Session
 Session.vim
@@ -486,7 +489,7 @@ tags
 [._]*.un~
 
 ### vscode ###
-.vscode/*
+.vscode
 !.vscode/settings.json
 !.vscode/tasks.json
 !.vscode/launch.json
