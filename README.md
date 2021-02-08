@@ -1,8 +1,10 @@
+![LOGO](https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/21ddb2eccb0ec77eef89708e5dbb3d14000872e7.png)
+
 # Video Maker
 
 ![syntax check](https://github.com/allinu/Video_Maker/workflows/syntax%20check/badge.svg)
 
-> 视频生成器
+> Python视频生成器
 
 ## 项目描述
 
