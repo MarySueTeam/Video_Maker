@@ -2,7 +2,7 @@
 name: 功能添加
 about: 添加新的功能帮助我们更好的改进这个项目
 title: 功能添加
-labels: enhancement
+labels: 增强
 assignees: allinu
 
 ---
@@ -16,4 +16,3 @@ assignees: allinu
 
 **附加信息**
 您可以添加一些附加信息在此
-

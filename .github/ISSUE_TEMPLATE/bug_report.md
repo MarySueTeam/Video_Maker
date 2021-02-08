@@ -2,7 +2,7 @@
 name: 问题报告
 about: 提出问题帮助我们更好的改进这个项目
 title: 问题报告
-labels: bug, help wanted, invalid, question
+labels: 不符合预期, 错误, 问题, 需要帮助
 assignees: allinu
 
 ---
