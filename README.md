@@ -67,6 +67,12 @@ python run.py
 - [ ] 支持配置文件
 
 
+
+## 项目结构
+
+![](https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/b80e5315efbf70d58454c35d1b8d67fbca559f1c.png)
+
+
 ## 更新日志
 
 - 2021 年 02 月 08 日 (1.0.0):

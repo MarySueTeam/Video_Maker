@@ -202,9 +202,9 @@ def computed_time(
         img_count * per_img_duration + start_img_duration + end_img_duration
     )
     console.log("预计生成总视频长度为 {}秒".format(video_total_time))
-    music_time = video_total_time * 1000
-    console.log("BGM目标时长计算完毕,预计{}毫秒".format(music_time))
-    return (video_total_time, music_time)
+    music_total_time = video_total_time * 1000
+    console.log("BGM目标时长计算完毕,预计{}毫秒".format(music_total_time))
+    return (video_total_time, music_total_time)
 
 
 def make_info_img(
