@@ -4,16 +4,15 @@
 
 ![syntax check](https://github.com/allinu/Video_Maker/workflows/syntax%20check/badge.svg)
 
-> Python视频生成器
+> Python 视频生成器
 
 ## 项目描述
 
-Python，以及`moviepy`根据图片创作出视频，使用`rich`优化控制台输出样式，代码执行不会破坏素材源文件
+Python，以及 `moviepy` 根据图片创作出视频，使用 `rich` 优化控制台输出样式，代码执行不会破坏素材源文件
 
 ## 目录介绍
 
-目录主要分为`必要目录`和`自动生成目录`，必要目录随项目下载就存在，不能删除，并且里面需要放置生成视频所需要的图片素材文件，图片素材文件格式可以为`jpg`,`png`,`jpeg`，暂不支持其他格式
-
+目录主要分为 `必要目录` 和 `自动生成目录`，必要目录随项目下载就存在，不能删除，并且里面需要放置生成视频所需要的图片素材文件，图片素材文件格式可以为 `jpg`,`png`,`jpeg`，暂不支持其他格式
 
 ### 必要目录
 
@@ -24,7 +23,6 @@ Python，以及`moviepy`根据图片创作出视频，使用`rich`优化控制�
 
 - `tmp/`: 程序执行过程中中间文件的存储路径（运行完毕自动清理）
 - `dist/`: 输出视频存放目录
-
 
 ### 使用方法
 
@@ -47,12 +45,11 @@ virtualvenv venv
 source ./venv/bin/activate
 pip install -r requirements.txt
 ```
-5. 执行`run.py`文件
+5. 执行 `run.py` 文件
 
 ```shell
 python run.py
 ```
-
 
 ## TODOs
 
@@ -66,12 +63,9 @@ python run.py
     - [ ] 支持观众交互式编辑
 - [ ] 支持配置文件
 
-
-
 ## 项目结构
 
 ![](https://images.weserv.nl/?url=https://i0.hdslb.com/bfs/article/b80e5315efbf70d58454c35d1b8d67fbca559f1c.png)
-
 
 ## 更新日志
 
@@ -80,4 +74,3 @@ python run.py
     - 支持多个 BGM
     - 添加片尾
     - 优化代码结构
-
