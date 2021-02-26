@@ -8,6 +8,7 @@ from rich.progress import track
 from pydub import AudioSegment
 import moviepy.video.fx.all as vfx
 import uuid
+import cv2
 
 console = Console()
 
@@ -26,19 +27,27 @@ def check_dirs(images_dir: str, bgm_dir: str) -> None:
         console.log("目录检测完毕")
 
 
+def make_img_background(img_path: str, size: tuple) -> Image:
+    """
+    根据图片特点，生成图片背景
+    :param img_path: 源图片的路径
+    :param size: 背景大小
+    :return: 返回生成的Image对象
+    """
+    origin_img = cv2.imread(img_path)
+
+
 def resize_image(
     target_image_path: str,
     origin_target_dir: str,
     target_size: tuple,
-    bg_color: tuple,
 ) -> None:
     """
-    调整图片大小，缺失的部分用黑色填充
+    调整图片大小，对缺失的部分进行填充
 
     :param target_image_path: 图片路径
     :param origin_target_dir: 转换完成后的暂时存目录 :type (origin_dir, target_dir)
     :param target_size: 分辨率大小 :type (width, height)
-    :param bg_color: 扩展部分颜色 :type (R,G,B)
     :return:
     """
 
@@ -58,7 +67,7 @@ def resize_image(
 
         image = image.resize((nw, nh), Image.BICUBIC)  # 缩小图像
         # image.show()
-
+        # TODO 自动调整图片背景
         new_image = Image.new("RGB", target_size, bg_color)  # 生成黑色图像
         # 为整数除法，计算图像的位置
         new_image.paste(image, ((w - nw) // 2, (h - nh) // 2))  # 将图像填充为中间图像，两侧为灰色的样式
@@ -143,7 +152,7 @@ def make_bgm(
     :param fade_time: BGM淡入淡出时长ms,(淡入时长,淡出时长)
     :return: 转换完成的文件路径和BGM时长(path,time)
     """
-    # TODO 处理多个BGM
+    # INFO 处理多个BGM
     before_music_time = 0
     diff_time = 0
     all_music = AudioSegment.empty()
@@ -169,7 +178,7 @@ def make_bgm(
                 console.log("当前的时长为： {}ms".format(after_music_time))
                 before_music_time = after_music_time
                 all_music = all_music + _music
-                # TODO 处理两个视频拼接时的细节
+                # INFO 处理两个视频拼接时的细节
     bgm = all_music
     fade_in_time, fade_out_time = fade_time
     bgm.fade_in(fade_in_time).fade_out(fade_out_time)

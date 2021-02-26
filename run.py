@@ -36,6 +36,7 @@ per_img_fade_time = (0.5, 0.5)
 end_img_fade_time = (0.5, 0.5)
 bgm_fade_time = (1, 1)
 
+# 片头片尾
 des_text = "画师：Aoi Ogata"
 end_text = "谢谢观看"
 font_path = "./fonts/Smartisan_Compact-Regular.ttf"
@@ -68,7 +69,7 @@ def main():
         console.log(output_dir + "创建成功")
     img_paths = read_dir(images_dir)
     for img_file in track(img_paths, description="调整图片中..."):
-        resize_image(img_file, tmp_image_dir, display_size, bg_color)
+        resize_image(img_file, tmp_image_dir, display_size)
 
     img_paths = read_dir(tmp_image_dir)
     bgm_paths = read_dir(bgm_dir)
