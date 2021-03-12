@@ -4,7 +4,7 @@
 
 ![syntax check](https://github.com/allinu/Video_Maker/workflows/syntax%20check/badge.svg)
 
-> Python 视频生成器
+> Python 视频生成器(支持一键生成P站搬运视频)
 
 ## 项目描述
 
@@ -16,10 +16,14 @@ Python，以及 `moviepy` 根据图片创作出视频，使用 `rich` 优化控�
 
 ### 必要目录
 
+> 必须存在的目录,并且按照规定放置素材文件
+
 - `src/images`: 存放原始图片
 - `src/music`: 存放 BGM
 
 ### 自动生成目录
+
+> 如果存在将跳过,没有将自动创建
 
 - `tmp/`: 程序执行过程中中间文件的存储路径（运行完毕自动清理）
 - `dist/`: 输出视频存放目录
@@ -54,7 +58,8 @@ python run.py
 ## TODOs
 
 - [X] 自动生成视频
-- [ ] 智能填充背景
+- [ ] 自动获取P站图片
+- [ ] 智能填充背景(根据不同的图片类型填充背景)
 - [X] 支持 BGM 添加
     - [X] 自动调整视频与音频的长度
 - [X] 支持片头添加介绍文字

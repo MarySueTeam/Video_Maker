@@ -68,9 +68,10 @@ def resize_image(
         image = image.resize((nw, nh), Image.BICUBIC)  # 缩小图像
         # image.show()
         # TODO 自动调整图片背景
-        new_image = Image.new("RGB", target_size, bg_color)  # 生成黑色图像
+        new_image = Image.new("RGB", target_size, (0, 0, 0))  # 生成黑色图像
         # 为整数除法，计算图像的位置
-        new_image.paste(image, ((w - nw) // 2, (h - nh) // 2))  # 将图像填充为中间图像，两侧为灰色的样式
+        new_image.paste(image,
+                        ((w - nw) // 2, (h - nh) // 2))  # 将图像填充为中间图像，两侧为灰色的样式
         # new_image.show()
 
         new_image_name = uuid.uuid1().hex
@@ -136,11 +137,11 @@ def read_dir(path: str) -> list:
 
 
 def make_bgm(
-    music_path_list: list,
-    output_dir: str,
-    output_tmp_filename: str,
-    music_total_time: int = 0,
-    fade_time: tuple = (1000, 1000),
+        music_path_list: list,
+        output_dir: str,
+        output_tmp_filename: str,
+        music_total_time: int = 0,
+        fade_time: tuple = (1000, 1000),
 ) -> str:
     """
     调整BGM时长以适应视频
@@ -165,16 +166,19 @@ def make_bgm(
             after_music_time = before_music_time + _music.duration_seconds * 1000
 
             if after_music_time >= music_total_time:
-                console.log("当前添加的歌曲是：{}".format(str(music_path).split("/")[-1]))
+                console.log("当前添加的歌曲是：{}".format(
+                    str(music_path).split("/")[-1]))
                 console.log("当前的时长为： {}ms".format(before_music_time))
                 diff_time = music_total_time - before_music_time
                 console.log("准备截取：{}ms".format(diff_time))
-                all_music = all_music + _music[len(_music) - diff_time :]
-                console.log("截取完毕，现在时长为：{}ms".format(before_music_time + diff_time))
+                all_music = all_music + _music[len(_music) - diff_time:]
+                console.log("截取完毕，现在时长为：{}ms".format(before_music_time +
+                                                     diff_time))
                 flag = 1
                 break
             else:
-                console.log("当前添加的歌曲是：{}".format(str(music_path).split("/")[-1]))
+                console.log("当前添加的歌曲是：{}".format(
+                    str(music_path).split("/")[-1]))
                 console.log("当前的时长为： {}ms".format(after_music_time))
                 before_music_time = after_music_time
                 all_music = all_music + _music
@@ -207,9 +211,8 @@ def computed_time(
 
     console.log("开始计算最终BGM时长")
     img_count = len(img_path_list)
-    video_total_time = (
-        img_count * per_img_duration + start_img_duration + end_img_duration
-    )
+    video_total_time = (img_count * per_img_duration + start_img_duration +
+                        end_img_duration)
     console.log("预计生成总视频长度为 {}秒".format(video_total_time))
     music_total_time = video_total_time * 1000
     console.log("BGM目标时长计算完毕,预计{}毫秒".format(music_total_time))
@@ -241,8 +244,7 @@ def make_info_img(
     draw = ImageDraw.Draw(bg)
     # 计算字体位置
     text_coordinate = int((img_size[0] - text_width[0]) / 2), int(
-        (img_size[1] - text_width[1]) / 2
-    )
+        (img_size[1] - text_width[1]) / 2)
     # 写字
     draw.text(text_coordinate, des_text, font_color, font=font)
     # 要保存图片的路径
@@ -271,12 +273,9 @@ def make_image_clip(
     :param fade_time: 淡入淡出时间,单位秒
     :return: ImageClip类型
     """
-    image_clip = (
-        ImageClip(img_file_path, duration=duration * fps)
-        .set_fps(fps)
-        .set_start(start_at)
-        .set_end(end_at)
-    )
+    image_clip = (ImageClip(
+        img_file_path, duration=duration *
+        fps).set_fps(fps).set_start(start_at).set_end(end_at))
     image_clip = image_clip.set_pos("center")
     # 淡入淡出
     image_clip = image_clip.fx(vfx.fadein, duration=fade_time[0])

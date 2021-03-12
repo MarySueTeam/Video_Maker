@@ -15,6 +15,9 @@ from utils import (
 )
 from rich.progress import track
 
+from pixivpy3 import *
+
+api = AppPixivAPI()
 console = Console()
 
 images_dir = "/src/images"
@@ -26,21 +29,28 @@ output_dir = "/dist/"
 output_filename = "out.mp4"
 display_size = (1920, 1080)
 fps = 30
+api_token = 'ADpdU_RmJzHQ1-o_5o5ZXAhNx3HVAZqPhjgd-ZN2o8E'
 
 start_img_duration = 10  # 片头图片显示时长
 per_img_display_time = 10  # 每张图片显示的时长
 end_img_duration = 10  # 片尾图片显示时长
 
-start_img_fade_time = (0.5, 0.5)
-per_img_fade_time = (0.5, 0.5)
-end_img_fade_time = (0.5, 0.5)
-bgm_fade_time = (1, 1)
+start_img_fade_time = (0.5, 0.5)  # 第一张图片的淡入淡出时间
+per_img_fade_time = (0.5, 0.5)  # 中间每张图片的淡入淡出时间
+end_img_fade_time = (0.5, 0.5)  # 结尾图片的淡入淡出时间
+bgm_fade_time = (1, 1)  # 背景音乐的淡入淡出时间
 
 # 片头片尾
+# TODO 自动设置替代
 des_text = "画师：Aoi Ogata"
 end_text = "谢谢观看"
+# 字体路径
 font_path = "./fonts/Smartisan_Compact-Regular.ttf"
+# 背景颜色
+# TODO 使用自动设置替代
 bg_color = (0, 0, 0)
+# 字体颜色
+# TODO 使用自动设置替代
 font_color = (255 - bg_color[0], 255 - bg_color[1], 255 - bg_color[2])
 
 current_path = os.path.abspath(".")
@@ -52,6 +62,8 @@ tmp_image_dir = current_path + tmp_image_dir
 output_dir = current_path + output_dir
 output_file = output_dir + output_filename
 bgm_fade_time = (bgm_fade_time[0] * 1000, bgm_fade_time[1] * 1000)
+
+api.auth(refresh_token=api_token)
 
 
 def main():
@@ -75,9 +87,10 @@ def main():
     bgm_paths = read_dir(bgm_dir)
 
     # 计算时长
-    video_total_time, music_total_time = computed_time(
-        img_paths, per_img_display_time, start_img_duration, end_img_duration
-    )
+    video_total_time, music_total_time = computed_time(img_paths,
+                                                       per_img_display_time,
+                                                       start_img_duration,
+                                                       end_img_duration)
 
     clips = []
 
@@ -145,9 +158,8 @@ def main():
     clips.append(video_end_info_img_clip)
     console.log("片尾文字创建完毕")
 
-    bgm_tmp_file_path = make_bgm(
-        bgm_paths, tmp_music_dir, "bgm.mp3", music_total_time, bgm_fade_time
-    )
+    bgm_tmp_file_path = make_bgm(bgm_paths, tmp_music_dir, "bgm.mp3",
+                                 music_total_time, bgm_fade_time)
     console.log("经过处理的音频文件路径为" + bgm_tmp_file_path)
     bgm_clip = AudioFileClip(bgm_tmp_file_path)
     console.log("背景音乐切片处理完毕")
