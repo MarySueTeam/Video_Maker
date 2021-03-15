@@ -1,0 +1,74 @@
+[source]
+# 素材文件目录
+# 图片
+images_dir = "/src/images"
+# 背景音乐
+bgm_dir = "/src/music"
+
+[tmp]
+# 中转文件目录
+tmp_dir = "/tmp"
+# 图片
+tmp_image_dir = "/tmp/images"
+# 音乐
+tmp_music_dir = "/tmp/music"
+
+[output]
+# 输出目录
+output_dir = "/dist/"
+# 输出视频的文件名
+output_filename = "out.mp4"
+
+[video]
+# 视频文件设置
+# 分辨率
+display_size = [1920, 1080]
+# 帧率
+fps = 30
+
+[pixiv]
+pixiv = true
+# Pixiv的token(可选)
+api_token = ''
+user_id = '8782286'
+avater_size = 300
+
+[image]
+# 图片设置
+# 片头图片显示时长
+start_img_duration = 10
+# 每张图片显示的时长
+per_img_display_time = 10
+# 片尾图片显示时长 
+end_img_duration = 10
+
+[fade_time]
+# 淡入淡出时间
+# 第一张图片的淡入淡出时间
+start_img_fade_time = [0.5, 0.5]
+# 中间每张图片的淡入淡出时间  
+per_img_fade_time = [0.5, 0.5]
+# 结尾图片的淡入淡出时间
+end_img_fade_time = [0.5, 0.5]
+# 背景音乐的淡入淡出时间
+bgm_fade_time = [1, 1]
+
+[text]
+# 片头片尾(文本大小受字体大小影响)
+# TODO 自动设置替代
+des_text = ""
+# 为了比较好的显示效果,请使用一行
+end_text = "谢谢观看"
+
+[font]
+# 字体路径
+font_path = "./fonts/Smartisan_Compact-Regular.ttf"
+font_size = 70
+
+[color]
+# 背景颜色也是图片背景
+# TODO 使用自动设置替代
+bg_color = [0, 0, 0]
+# 字体颜色
+# TODO 使用自动设置替代
+font_color = [255, 255, 255]
