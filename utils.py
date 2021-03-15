@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import os
 import shutil
+from pixivpy3 import *
 from moviepy.editor import ImageClip
 from PIL import Image, ImageDraw, ImageFont
 from rich.console import Console
@@ -9,15 +10,30 @@ from pydub import AudioSegment
 import moviepy.video.fx.all as vfx
 import uuid
 import cv2
+import toml
+
+config_file = 'config.toml'
+CONFIG = toml.load(config_file)
+
+api_token = CONFIG['pixiv']['api_token']
+user_id = CONFIG['pixiv']['user_id']
+R = CONFIG['pixiv']['avater_size']
+
+# 创建P站的API
+api = AppPixivAPI()
+# API 登录
+api.auth(refresh_token=api_token)
 
 console = Console()
 
 
 def check_dirs(images_dir: str, bgm_dir: str) -> None:
     """
-    检测本应该存在的目录是否存在
-    :param images_dir: 图片文件目录
-    :param bgm_dir: BGM问价目录
+    检测必要目录是否存在
+
+    Args:
+        images_dir (str): 图片素材目录
+        bgm_dir (str): 背景音乐素材目录
     """
     if not os.path.exists(images_dir):
         console.log("请创建" + images_dir + "目录并放入你的图片文件")
@@ -27,12 +43,17 @@ def check_dirs(images_dir: str, bgm_dir: str) -> None:
         console.log("目录检测完毕")
 
 
+# TODO 生成图片背景
 def make_img_background(img_path: str, size: tuple) -> Image:
     """
-    根据图片特点，生成图片背景
-    :param img_path: 源图片的路径
-    :param size: 背景大小
-    :return: 返回生成的Image对象
+    根据图片特点填充背景
+
+    Args:
+        img_path (str): 图片路径
+        size (tuple): 背景大小
+
+    Returns:
+        Image: 生成的Image对象
     """
     origin_img = cv2.imread(img_path)
 
@@ -40,15 +61,15 @@ def make_img_background(img_path: str, size: tuple) -> Image:
 def resize_image(
     target_image_path: str,
     origin_target_dir: str,
-    target_size: tuple,
+    target_size: list,
 ) -> None:
     """
-    调整图片大小，对缺失的部分进行填充
+    调整图像大小
 
-    :param target_image_path: 图片路径
-    :param origin_target_dir: 转换完成后的暂时存目录 :type (origin_dir, target_dir)
-    :param target_size: 分辨率大小 :type (width, height)
-    :return:
+    Args:
+        target_image_path (str): 存放目标路径
+        origin_target_dir (str): 原始图像存放路径
+        target_size (list): 调整目标大小
     """
 
     file_ext = target_image_path.split(".")[-1]
@@ -85,10 +106,13 @@ def resize_image(
 
 def mkdirs(path: str) -> bool:
     """
-    创建目录
+    创建目标路径
 
-    :param path: 需要创建的路径
-    :return: 存在并成功返回True，不存在返回False
+    Args:
+        path (str): 目标路径
+
+    Returns:
+        bool: 创建结果成功为True失败为False
     """
     isExists = os.path.exists(path)
     if not isExists:
@@ -100,10 +124,13 @@ def mkdirs(path: str) -> bool:
 
 def rmdirs(path: str) -> bool:
     """
-    删除目录及目录下面的文件
+    删除目录及目录下的文件
 
-    :param path: 需要删除的目录
-    :return: 存在并删除成功返回True，不存在返回False
+    Args:
+        path (str): 需要删除的路径
+
+    Returns:
+        bool: 删除结果成功为True失败为False
     """
     isExists = os.path.exists(path)
     if isExists:
@@ -115,10 +142,13 @@ def rmdirs(path: str) -> bool:
 
 def read_dir(path: str) -> list:
     """
-    读取路径下的文件并返回
+    读取目录下的文件
 
-    :param path: 读取的文件路径(绝对路径)
-    :return: 文件绝对路径的列表
+    Args:
+        path (str): 路径(绝对路径)
+
+    Returns:
+        list: 文件列表(绝对路径)
     """
 
     # 排除干扰文件
@@ -137,21 +167,24 @@ def read_dir(path: str) -> list:
 
 
 def make_bgm(
-        music_path_list: list,
-        output_dir: str,
-        output_tmp_filename: str,
-        music_total_time: int = 0,
-        fade_time: tuple = (1000, 1000),
+    music_path_list: list,
+    output_dir: str,
+    output_tmp_filename: str,
+    music_total_time: int = 0,
+    fade_time: list = [1000, 1000],
 ) -> str:
     """
     调整BGM时长以适应视频
 
-    :param music_path_list: BGM文件存储路径
-    :param output_dir: 转换过后BGM文件输出路径，中转文件的暂时存放路径
-    :param output_tmp_filename: 转换过后BGM文件名称
-    :param music_total_time: BGM的播放时长,
-    :param fade_time: BGM淡入淡出时长ms,(淡入时长,淡出时长)
-    :return: 转换完成的文件路径和BGM时长(path,time)
+    Args:
+        music_path_list (list): BGM文件的存放路径
+        output_dir (str): 转换过后BGM文件的输出路径
+        output_tmp_filename (str): 转换过后的BGM文件名称
+        music_total_time (int, optional): BGM的播放时长. Defaults to 0.
+        fade_time (list, optional): BGM的淡入淡出时长ms. Defaults to [1000, 1000].
+
+    Returns:
+        str: 转换完成的文件存放路径
     """
     # INFO 处理多个BGM
     before_music_time = 0
@@ -200,13 +233,16 @@ def computed_time(
     end_img_duration: int = 0,
 ) -> tuple:
     """
-    根据图片数量、图片时长、以及单个音频长度计算出视频总时长以及音频的重复次数
+    根据图片数量,时长以及单个音频的长度计算出视频总时长以及音频重复次数
 
-    :param img_list: 视频所包含的图片路径列表
-    :param per_img_duration: 单个图片的显示时长
-    :param start_img_duration: 片头长度
-    :param end_img_duration: 片尾长度
-    :return 返回总的视频时长（单位：秒）以及音乐调整后的时长（单位：毫秒）
+    Args:
+        img_path_list (list): 视频包含的图片的路径列表
+        per_img_duration (int): 单个图片的显示时长
+        start_img_duration (int, optional): 片头长度. Defaults to 0.
+        end_img_duration (int, optional): 片尾长度. Defaults to 0.
+
+    Returns:
+        tuple: 视频总时长s和音乐调整后的时长ms
     """
 
     console.log("开始计算最终BGM时长")
@@ -219,32 +255,68 @@ def computed_time(
     return (video_total_time, music_total_time)
 
 
-def make_info_img(
-    img_size: tuple = (1920, 1080),
-    bg_color: tuple = (255, 255, 255),
-    font_color: tuple = (255, 255, 255),
-    des_text: str = "",
-    font_path: str = "./fonts/Smartisan_Compact-Regular.ttf",
-    font_size: int = 100,
-    tmp_store_path: str = "./tmp",
-    file_name: str = "output.jpg",
-) -> str:
+def make_info_img(img_size: list = [1920, 1080],
+                  bg_color: list = (0, 0, 0),
+                  font_color: list = (255, 255, 255),
+                  des_text: str = "",
+                  font_path: str = "",
+                  font_size: int = 100,
+                  tmp_store_path: str = "./tmp",
+                  file_name: str = "output.jpg",
+                  cover: bool = True,
+                  cover_name: str = "cover.jpg",
+                  avater: bool = False,
+                  avater_url: str = "") -> str:
     """
-    创建视频开头图像
+    制作开头信息画面
 
-    :param img_size: 图片大小，通常为视频分辨率
-    :param des_text: 显示文字内容
-    :param font_path: 字体文件路径
-    :param font_size: 字体大小
-    :return: 生成的图片所存放的路径
+    Args:
+        img_size (list, optional): 图像的分辨率. Defaults to [1920, 1080].
+        bg_color (tuple, optional): 背景颜色. Defaults to (0, 0, 0).
+        font_color (tuple, optional): 字体颜色. Defaults to (255, 255, 255).
+        des_text (str, optional): 描述信息. Defaults to "".
+        font_path (str, optional): 字体文件路径. Defaults to "".
+        font_size (int, optional): 字体大小. Defaults to 100.
+        tmp_store_path (str, optional): 中间存储文件路径. Defaults to "./tmp".
+        file_name (str, optional): 文件名. Defaults to "output.jpg".
+        cover (bool,optional): 是否创建封面, Defaults to True.
+        cover_name (str,optional): 封面文件保存的名称, Defaults to "cover.jpg".
+        avater (bool, optional): 是否包含头像. Defaults to False.
+        avater_url (str, optional): 原头像文件url. Defaults to "".
+
+    Returns:
+        str: 处理完毕的图像路径
     """
+
     bg = Image.new("RGB", img_size, color=bg_color)
     font = ImageFont.truetype(font_path, font_size)
-    text_width = font.getsize(des_text)
+    text_size = font.getsize(des_text)
     draw = ImageDraw.Draw(bg)
-    # 计算字体位置
-    text_coordinate = int((img_size[0] - text_width[0]) / 2), int(
-        (img_size[1] - text_width[1]) / 2)
+
+    # TODO 添加画师头像(圆形)
+    circle_avater_path = ''
+    if avater:
+        prefix = str(avater_url).split('.')[-1]
+        api.download(url=avater_url,
+                     path=os.path.curdir + '/tmp',
+                     replace=True,
+                     fname='avater.' + prefix)
+        avater_path = os.path.curdir + '/tmp/avater.' + prefix
+        circle_avater_path = circle_clip(avater_path, prefix)
+        avater_image = Image.open(circle_avater_path).convert('RGBA')
+        console.log("头像制作成功")
+        avater_size = avater_image.size
+        # 计算字体位置
+        text_coordinate = int((img_size[0] - text_size[0]) / 2), int(
+            (img_size[1] + text_size[1] + int(R / 2) + 100) / 2)
+        avater_coordinate = int((img_size[0] - avater_size[0]) / 2), int(
+            (img_size[1] - avater_size[1] - int(R / 2)) / 2)
+        console.log("头像位置处理完毕: {avater_coordinate}")
+        bg.paste(avater_image, avater_coordinate, avater_image)
+    else:
+        # 计算字体位置
+        text_coordinate = int((img_size[0] - text_size[0]) / 2), int(
+            (img_size[1] - text_size[1]) / 2)
     # 写字
     draw.text(text_coordinate, des_text, font_color, font=font)
     # 要保存图片的路径
@@ -252,6 +324,12 @@ def make_info_img(
     # 保存图片
     bg.save(img_path)
     console.log("保存成功 {}".format(img_path))
+    if cover:
+        current_path = os.path.abspath(".")
+        output_dir = CONFIG['output']['output_dir']
+        output_dir = current_path + output_dir
+        cover_path = os.path.join(output_dir, cover_name)
+        bg.save(cover_path)
     return img_path
 
 
@@ -261,17 +339,21 @@ def make_image_clip(
     fps: int,
     start_at: int,
     end_at: int,
-    fade_time: tuple,
+    fade_time: list,
 ) -> ImageClip:
     """
     根据图像路径创建ImageClip
-    :param img_file_path: 图片的路径
-    :param duration: 显示时长
-    :param fps: 帧率
-    :param start_at: 轨道开始位置
-    :param end_at: 轨道结束位置
-    :param fade_time: 淡入淡出时间,单位秒
-    :return: ImageClip类型
+
+    Args:
+        img_file_path (str): 图片路径
+        duration (int): 显示时长
+        fps (int): 帧率
+        start_at (int): 轨道开始的位置
+        end_at (int): 轨道结束的位置
+        fade_time (list): 淡入淡出的时间s
+
+    Returns:
+        ImageClip: 转换完成的ImageClip
     """
     image_clip = (ImageClip(
         img_file_path, duration=duration *
@@ -281,3 +363,104 @@ def make_image_clip(
     image_clip = image_clip.fx(vfx.fadein, duration=fade_time[0])
     image_clip = image_clip.fx(vfx.fadeout, duration=fade_time[1])
     return image_clip
+
+
+def circle_clip(
+    image_path: str,
+    prefix: str,
+    tmp_store_path: str = "./tmp",
+) -> str:
+    """
+    裁剪圆形图片
+
+    Args:
+        image_path (str): 原图存放路径
+        prefix (str): 图片后缀
+        tmp_store_path (str, optional): 临时文件存放路径. Defaults to "./tmp".
+
+    Returns:
+        str: 返回处理完毕后的文件路径
+    """
+    origin_image = Image.open(image_path).convert('RGBA')
+    console.log("头像读取成功")
+    w, h = origin_image.size
+    console.log(f"头像大小为: {w}x{h}")
+    r = int(R / 2)
+    if w != h:
+        origin_image = origin_image.resize((R, R), Image.ANTIALIAS)
+    tmp_image = Image.new('RGBA', (r * 2, r * 2), (255, 255, 255, 0))
+    p_origin = origin_image.load()
+    p_tmp = tmp_image.load()
+    _r = float(R / 2)
+    for i in track(range(R), description="裁剪头像..."):
+        for j in range(R):
+            x = abs(i - _r)
+            y = abs(j - _r)
+            __r = (pow(x, 2) + pow(y, 2))**0.5
+            if __r < r:
+                p_tmp[i - (_r - r), j - (_r - r)] = p_origin[i, j]
+    save_path = tmp_store_path + '/' + 'circle_avater.' + prefix
+    tmp_image.save(save_path)
+    console.log("头像处理完毕")
+    console.log(f'头像路径为({save_path})')
+    return save_path
+
+
+def _get_img(user_id: str, offset: int = 0) -> int:
+    """
+    下载当前页图片并返回下一页的偏移量
+
+    Args:
+        user_id (str): 画师ID
+        offset (int, optional): 偏移量. Defaults to 0.
+
+    Returns:
+        int: 下一页的偏移量
+    """
+    ans = api.user_illusts(user_id=user_id, offset=offset)
+
+    for item in track(ans.illusts, description="下载图片中..."):
+        download_url = item.image_urls['large']
+        api.download(url=download_url,
+                     path=os.path.curdir + '/src/images',
+                     replace=True)
+    # INFO 获取偏移量
+    offset = api.parse_qs(ans['next_url'])['offset']
+    # INFO 返回偏移量,以便进行之后的执行
+    return offset
+
+
+def get_all_img(user_id: str = user_id):
+    """
+    获取画师所有的图片
+
+    Args:
+        user_id (str): 画师ID
+    """
+    offset = 0
+    while True:
+        try:
+            offset = _get_img(user_id, offset)
+        except TypeError:
+            console.log("下载完毕")
+            break
+
+
+def get_user_info(user_id: str = user_id) -> dict:
+    """
+    获取画师信息
+
+    Args:
+        user_id (str, optional): 画师ID. Defaults to user_id.
+
+    Returns:
+        dict: 画师信息
+    """
+    info = api.user_detail(user_id)
+    region = info.profile.region
+    name = info.user.name
+
+    console.print(info)
+    console.print(f'国家: {region}')
+    console.print(f'画师: {name}')
+    return info
