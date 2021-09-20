@@ -4,13 +4,9 @@
 
 ![syntax check](https://github.com/allinu/Video_Maker/workflows/syntax%20check/badge.svg)
 
-<<<<<<< HEAD
-> ## ⚠️ 当前基本功能已经实现，可供优化的地方太多，正在边学，便做，进程缓慢，见谅
+⚠️ 当前基本功能已经实现，可供优化的地方太多，正在边学，便做，进程缓慢，见谅
 
-> Python 视频生成器
-=======
-> Python 视频生成器(支持一键生成P站搬运视频)
->>>>>>> fix#4
+Python 视频生成器(支持一键生成P站搬运视频)
 
 ## 项目描述
 
@@ -61,11 +57,7 @@ pip install -r requirements.txt
 python run.py
 ```
 
-<<<<<<< HEAD
-## TODOs
-=======
 ## TODO
->>>>>>> fix#4
 
 - [X] 自动生成视频
 - [X] 自动获取P站图片
@@ -77,11 +69,8 @@ python run.py
     - [ ] 支持复杂点的配文
 - [ ] 支持自动发布视频到 Bilibili
     - [ ] 支持观众交互式编辑
-<<<<<<< HEAD
-- [ ] 支持配置文件
-=======
 - [X] 支持配置文件
->>>>>>> fix#4
+
 
 ## 项目结构
 
