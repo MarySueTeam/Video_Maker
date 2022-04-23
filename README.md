@@ -8,7 +8,7 @@ Python 视频生成器
 
 ---
 
-⚠️ 当前基本功能已经实现，可供优化的地方太多，正在边学，边做，进程缓慢，见谅
+⚠️ 当前基本功能已经实现，可供优化的地方太多，正在边学，边做，进程缓慢，见谅，如果项目存在侵权行为，请立即联系删除
 
 
 ## 项目描述
@@ -57,8 +57,8 @@ chmod +x build.sh
 ## 致谢 🙏
 
 - [Manim](https://github.com/ManimCommunity/manim)
-- 沐瑶软笔手写体、锤子字体
 - [微软 TTS](https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/#overview)
+- 沐瑶软笔手写体、锤子字体
 
 ## 更新日志
 
