@@ -58,6 +58,7 @@ chmod +x build.sh
 
 - [Manim](https://github.com/ManimCommunity/manim)
 - 沐瑶软笔手写体、锤子字体
+- [微软 TTS](https://azure.microsoft.com/zh-cn/services/cognitive-services/text-to-speech/#overview)
 
 ## 更新日志
 
