@@ -46,7 +46,7 @@ class Video(Scene):
         # INFO 视频结尾
         LOGO = ImageMobject("./media/images/logo.png").scale(0.2).to_edge(UP, buff=2)
 
-        messages_text = "你可以在下面的平台找到我，这一期就先到这里，我们下期再见。拜拜～"
+        messages_text = "你可以在下面的平台找到我，这一期就先到这里，我们下期再见。"
         messages = Text("-你可以在下面的平台找到我-", font="Muyao-Softbrush").scale(0.4).next_to(LOGO, DOWN)
 
         # INFO 获取音频文件 

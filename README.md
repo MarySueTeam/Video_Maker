@@ -38,12 +38,27 @@ virtualvenv venv
 source ./venv/bin/activate
 pip install -r requirements.txt
 ```
+5. 存放文字
+
+```shell
+
+文字内容存放在 ./media/words/words.txt 中
+需要自己存放写入
+
+* 其他的文字内容需要修改源代码，日后会解决，目前能力有限
+
+```
+
+
 
 5. 构建视频
 
 ```shell
-chmod +x build.sh
-./build.sh
+chmod +x *.sh
+
+./build.sh -> 主要用于最后输出
+或者
+./run.sh -> 主要用于日常预览
 ```
 
 ## TODO
